@@ -50,6 +50,30 @@ router.post('/', (req, res) => {
     });
 });
 
+// login
+router.post('/login', (req, res) => {
+    // expects {email: 'lernantino@gmail.com', password: 'password1234'}
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    }).then(dbUserData => {
+        if (!dbUserData) {
+            res.status(400).json({ message: 'no user with this email address!' });
+            return;
+        }
+        //res.json({ user: dbUserData });
+
+        //verify user
+        const validPassword = dbUserData.checkPassword(req.body.password);
+        if (!validPassword) {
+            res.status(400).json({ message: 'incorrect password' });
+            return;
+        }
+        res.json({ user: dbUserData, message: 'you are now logged in!' });
+    });
+});
+
 // PUT /api/users/1
 router.put('/:id', (req, res) => {
     // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
