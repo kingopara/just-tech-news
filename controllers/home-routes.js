@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const { Post, User, Comment } = require('../models');
+const { Post, User, Comment, Vote } = require('../models');
 
 router.get('/', (req, res) => {
    // console.log(req.session);
@@ -95,10 +95,10 @@ router.get('/post/:id', (req, res) => {
             return;
         }
         // serialize the data
-        const posts = dbPostData.get({ plain: true });
+        const post = dbPostData.get({ plain: true });
         // render data to template
         res.render('single-post', { 
-            posts,
+            post,
             loggedIn: req.session.loggedIn
         });
     })
